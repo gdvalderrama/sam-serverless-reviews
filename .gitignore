@@ -1,0 +1,11 @@
+# Ignore compiled python files
+*.pyc
+*.pyo
+
+# Vim files
+*.swp
+*.swo
+
+*.DS_Store
+
+.ropeproject/
