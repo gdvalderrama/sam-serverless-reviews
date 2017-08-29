@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: 'Proxy for S3 upload'
+Resources:
+  S3PutItemProxy:
+    Type: AWS::Serverless::Api
+    Properties:
+        StageName: dev
+        DefinitionBody:
+            swagger: 2.0
+            info:
+              version: "2016-10-13T23:04:43Z"
+              title: "S3PutItemProxy"
+            host: "0rilh75a5k.execute-api.eu-west-1.amazonaws.com"
+            basePath: "/dev"
+            schemes:
+            - "https"
+            paths:
+              /{folder}/{item}:
+                put:
+                  produces:
+                  - "application/json"
+                  parameters:
+                  - name: "Content-Type"
+                    in: "header"
+                    required: false
+                    type: "string"
+                  - name: "item"
+                    in: "path"
+                    required: true
+                    type: "string"
+                  - name: "folder"
+                    in: "path"
+                    required: true
+                    type: "string"
+                  responses:
+                    '200':
+                      description: "200 response"
+                      schema:
+                        $ref: "#/definitions/Empty"
+                      headers:
+                        Content-Length:
+                          type: "string"
+                        Content-Type:
+                          type: "string"
+                    '400':
+                      description: "400 response"
+                    '500':
+                      description: "500 response"
+                  security:
+                  - sigv4: []
+                  x-amazon-apigateway-integration:
+                    credentials: "arn:aws:iam::360879838225:role/realbrand-api-dev"
+                    responses:
+                      4\d{2}:
+                        statusCode: "400"
+                      default:
+                        statusCode: "200"
+                        responseParameters:
+                          method.response.header.Content-Type: "integration.response.header.Content-Type"
+                          method.response.header.Content-Length: "integration.response.header.Content-Length"
+                      5\d{2}:
+                        statusCode: "500"
+                    requestParameters:
+                      integration.request.header.x-amz-acl: "'authenticated-read'"
+                      integration.request.path.object: "method.request.path.item"
+                      integration.request.header.Expect: "'100-continue'"
+                      integration.request.path.bucket: "method.request.path.folder"
+                      integration.request.header.Content-Type: "method.request.header.Content-Type"
+                    uri: "arn:aws:apigateway:eu-west-1:s3:path/{bucket}/{object}"
+                    passthroughBehavior: "when_no_match"
+                    httpMethod: "PUT"
+                    type: "aws"
+            securityDefinitions:
+              sigv4:
+                type: "apiKey"
+                name: "Authorization"
+                in: "header"
+                x-amazon-apigateway-authtype: "awsSigv4"
+            definitions:
+              Empty:
+                type: "object"
+                title: "Empty Schema"

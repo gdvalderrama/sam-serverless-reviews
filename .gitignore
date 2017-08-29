@@ -9,3 +9,6 @@
 *.DS_Store
 
 .ropeproject/
+
+# AWS Packaging output
+output.yaml
