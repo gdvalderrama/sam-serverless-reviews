@@ -36,3 +36,18 @@ def handler_get(event, context):
     except ClientError as e:
         logger.info("Get Item failed: {}".format(e))
         return create_response(500, e.response["Error"]["Message"])
+
+
+def handler_delete(event, context):
+    logger.info("Received event {}".format(event))
+
+    try:
+        result = dynamodb_client.delete_item(
+            TableName=table_name,
+            Key={"id": {"S": event["pathParameters"]["reviewId"]}}
+        )
+        logger.info("Delete Item result: {}".format(result))
+        return create_response(200, result)
+    except ClientError as e:
+        logger.info("Delete Item failed: {}".format(e))
+        return create_response(500, e.response["Error"]["Message"])

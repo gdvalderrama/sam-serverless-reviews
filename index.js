@@ -12,24 +12,6 @@ const createResponse = (statusCode, body) => {
     }
 };
 
-exports.get = (event, context, callback) => {
-    var params = {
-        "TableName": tableName,
-        "Key": {
-            id: event.pathParameters.reviewId
-        }
-    };
-    
-    dynamo.getItem(params, (err, data) => {
-        var response;
-        if (err)
-            response = createResponse(500, err);
-        else
-            response = createResponse(200, data.Item ? data.Item.doc : null);
-        callback(null, response);
-    });
-};
-
 exports.put = (event, context, callback) => {
     var item = {
         "id": event.pathParameters.reviewId,
@@ -42,25 +24,6 @@ exports.put = (event, context, callback) => {
     };
 
     dynamo.putItem(params, (err, data) => {
-        var response;
-        if (err)
-            response = createResponse(500, err);
-        else
-            response = createResponse(200, null);
-        callback(null, response);
-    });
-};
-
-exports.delete = (event, context, callback) => {
-
-    var params = {
-        "TableName": tableName,
-        "Key": {
-            "id": event.pathParameters.reviewId
-        }
-    };
-
-    dynamo.deleteItem(params, (err, data) => {
         var response;
         if (err)
             response = createResponse(500, err);

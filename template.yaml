@@ -35,8 +35,8 @@ Resources:
   DeleteFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.delete
-      Runtime: nodejs4.3
+      Handler: lambda_reviews.handler_delete
+      Runtime: python3.6
       Policies: AmazonDynamoDBFullAccess
       Environment:
         Variables:
