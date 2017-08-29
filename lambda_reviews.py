@@ -38,6 +38,22 @@ def handler_get(event, context):
         return create_response(500, e.response["Error"]["Message"])
 
 
+def handler_put(event, context):
+    logger.info("Received event {}".format(event))
+    item = json.loads(event["body"])['item']
+
+    try:
+        result = dynamodb_client.put_item(
+            TableName=table_name,
+            Item=item
+        )
+        logger.info("Get Item result: {}".format(result))
+        return create_response(200, result)
+    except ClientError as e:
+        logger.info("Get Item failed: {}".format(e))
+        return create_response(500, e.response["Error"]["Message"])
+
+
 def handler_delete(event, context):
     logger.info("Received event {}".format(event))
 

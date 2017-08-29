@@ -20,8 +20,8 @@ Resources:
   PutFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.put
-      Runtime: nodejs4.3
+      Handler: lambda_reviews.handler_put
+      Runtime: python3.6
       Policies: AmazonDynamoDBFullAccess
       Environment:
         Variables:
