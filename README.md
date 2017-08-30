@@ -3,7 +3,6 @@ AWS SAM (serverless application model)
 ## AWS SAM Local
 
 Use aws sam local to test and debug locally.
-While aws sam local is running, reload is only neccessary if the template yaml has changed
 
 ### Setup install
 
@@ -43,10 +42,12 @@ aws dynamodb create-table --table-name reviewTable
 
 * validate the template yaml: `sam validate`
 * run API Gateway locally: `sam local start-api`
+* invoke a lambda function: `sam local invoke "FunctionName" -e event.json`
 
-To include environment variables via external file:
+Include environment variables:
 
-`sam local start-api --env-vars file_with_env_vars.json`
+* via external file: `sam local start-api --env-vars file_with_env_vars.json`
+* via shell: `TABLE_NAME=reviewTable sam local start-api`
 
 #### DynamoDB local
 
