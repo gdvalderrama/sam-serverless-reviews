@@ -9,6 +9,10 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 dynamodb_client = boto3.client("dynamodb")
+
+if os.getenv("AWS_SAM_LOCAL"):
+    dynamodb_client = boto3.client('dynamodb', endpoint_url='http://docker.for.mac.localhost:8000/')
+
 table_name = os.environ["TABLE_NAME"]
 
 logger.info("Using table {}".format(table_name))
