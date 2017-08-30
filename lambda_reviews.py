@@ -3,6 +3,7 @@ import logging
 import json
 import boto3
 from botocore.exceptions import ClientError
+from boto3.dynamodb.conditions import Key
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -21,6 +22,24 @@ def create_response(status_code, body):
     }
     logger.info("Created response: {}".format(response))
     return response
+
+
+# WIP
+def handler_get_all(event, context):
+    logger.info("Received event {}".format(event))
+    # Get profile_id from authentication header
+    profile_id = "33"
+
+    try:
+        result = dynamodb_client.query(
+            KeyConditionExpression=Key("profile_id").eq(profile_id),
+            TableName=table_name
+        )
+        logger.info("Get Item result: {}".format(result))
+        return create_response(200, result["Items"])
+    except ClientError as e:
+        logger.info("Get Item failed: {}".format(e))
+        return create_response(500, e.response["Error"]["Message"])
 
 
 def handler_get(event, context):

@@ -2,6 +2,21 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Simple CRUD web service for reviews. State is stored in a DynamoDB table.
 Resources:
+  GetAllFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_reviews.handler_get_all
+      Runtime: python3.6
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref reviewTable
+      Events:
+        GetAllReviews:
+          Type: Api
+          Properties:
+            Path: /review
+            Method: get
   GetFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -10,7 +25,7 @@ Resources:
       Policies: AmazonDynamoDBReadOnlyAccess
       Environment:
         Variables:
-          TABLE_NAME: !Ref Table
+          TABLE_NAME: !Ref reviewTable
       Events:
         GetReview:
           Type: Api
@@ -25,7 +40,7 @@ Resources:
       Policies: AmazonDynamoDBFullAccess
       Environment:
         Variables:
-          TABLE_NAME: !Ref Table
+          TABLE_NAME: !Ref reviewTable
       Events:
         PutReview:
           Type: Api
@@ -40,12 +55,16 @@ Resources:
       Policies: AmazonDynamoDBFullAccess
       Environment:
         Variables:
-          TABLE_NAME: !Ref Table
+          TABLE_NAME: !Ref reviewTable
       Events:
         DeleteReview:
           Type: Api
           Properties:
             Path: /review/{reviewId}
             Method: delete
-  Table:
+  reviewTable:
     Type: AWS::Serverless::SimpleTable
+    Properties:
+        PrimaryKey:
+            Name: id
+            Type: String
