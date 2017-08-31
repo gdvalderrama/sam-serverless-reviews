@@ -1,5 +1,14 @@
 AWS SAM (serverless application model)
 
+## AWS SAM
+
+build package:
+`aws cloudformation package --template-file template.yaml --output-template-file output.yaml
+--s3-bucket my-bucket-name`
+
+deploy package:
+`aws cloudformation deploy --template-file output.yaml --stack-name StackName --capabilities CAPABILITY_IAM`
+
 ## AWS SAM Local
 
 Use aws sam local to test and debug locally.
